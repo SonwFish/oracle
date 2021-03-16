@@ -12,7 +12,7 @@
 
 ### 查询与分析
 * 查询1：
-```
+```SQL
 set autotrace on
 
 SELECT d.department_name,count(e.job_id)as "部门总人数",
@@ -36,7 +36,7 @@ GROUP BY d.department_name;
 ![Image text](../test1/img/0103.png)
 
 * 查询2：
-```
+```SQL
 set autotrace on
 
 SELECT d.department_name,count(e.job_id)as "部门总人数",
@@ -59,13 +59,11 @@ HAVING d.department_name in ('IT','Sales');
 ![Image text](../test1/img/0203.png)
 
 ### 分析和结论：
-“查询1”是先进行筛选再进行分组，即先进行HAVING操作再进行GROUP操作；“查询2”则是先进行分组再进行筛选，即先进行GROUP操作再进行HAVING操作。这两个步骤的先后顺序影响了两条查询语句的执行效率，从上图的查询花费时间对比可得，“查询1”的速度比“查询2”的速度更快，重复多次运行后，得到的结论依然成立。
-
-我认为是因为“查询1”使用HAVING操作后已经得到了相应的数据集合，GROUP操作只是将该数据集进行排序，速度较快；而”查询2“则是先进行GROUP操作将大量的数据进行排序，排序量更大所有执行效率较低，再执行HAVING就仍需要在大量的数据集中进行指定数据类的查询，使效率再一次降低。
+从优化指导中 可以得出，“查询1”没有使用索引功能，导致查询的速度没有“查询2”的查询速度快，而“查询2”使用了索引。从“脚本输出”得到的结果还可以看出，查询同样的数据，“查询1”的“逻辑读”即logical read只有7万多条，而“查询2”的logical read有10万多条。又查资料得到，逻辑读是从内存中读取数据，而物理读是从磁盘中读取数据，内存的运行速率是大于磁盘的，从而也可以得到“查询2”的执行速率大于“查询1”。
 
 ### 设计查询：
 我使用了内连接的方式设计查询，即使用了INNER JOIN连接两张表来进行查询：
-```
+```SQL
 set autotrace on
 
 SELECT hr.departments.department_name,count(hr.employees.job_id)as "部门总人数",
