@@ -32,28 +32,29 @@ Oracle有一个开发者角色resource，可以创建表、过程、触发器等
 2.创建角色
 ```sql
     # 创建自己的角色
-    CREATE ROLE con_snow;
+    CREATE ROLE stu_hhb;
+    # 给角色赋予connect和resource角色，同时也包含CREATE VIEW权限
+    GRANT connect,resource,CREATE VIEW TO stu_hhb;
 ```
 ![image](./img/img02.png) 
 ```sql
-    # 给角色赋予connect和resource角色，同时也包含CREATE VIEW权限
-    GRANT connect,resource,CREATE VIEW TO con_snow;
     # 创建用户
     CREATE USER hhb_201810414413 IDENTIFIED BY 123 DEFAULT TABLESPACE users TEMPORARY TABLESPACE temp;
     # 给用户分配50m表空间
     ALTER USER hhb_201810414413 QUOTA 50M ON users;
     #给用户赋予角色
-    GRANT con_snow TO hhb_201810414413;
+    GRANT stu_hhb TO hhb_201810414413;
 ```
 ![image](./img/img03.png)
 
 
-3.新用户new_user连接到pdborcl，创建表mytable和视图myview，插入数据，最后将myview的SELECT对象权限授予hr用户。
+3.新用户hhb_201810414413连接到pdborcl，创建表mytable和视图myview，插入数据，最后将myview的SELECT对象权限授予hr用户。
 
 使用新用户(new_user)登录：
 ![image](./img/img04.png)
-创建mytable:
-![image](./img/img05.png)
+
+创建mytable并进行查询:
+
 ```sql
 SQL> INSERT INTO mytable(id,name)VALUES(1,'zhang');
 1 row created.
@@ -72,12 +73,13 @@ SQL>exit
 
 ```
 执行查询语句，查询mytable:
-![image](./img/img06.png)
+![image](./img/img05.png)
 
-4. 用户hr连接到pdborcl，查询new_user授予它的视图myview
+
+hhb_2018104144134. 用户hr连接到pdborcl，查询hhb_201810414413授予它的视图myview
 ```sql
 $ sqlplus hr/123@pdborcl
-SQL> SELECT * FROM new_user.myview;
+SQL> SELECT * FROM hhb_201810414413.myview;
 NAME
 --------------------------------------------------
 zhang
@@ -85,7 +87,7 @@ wang
 SQL> exit
 ```
 查询结果：
-![image](./img/img07.png)
+![image](./img/img06.png)
 4.查看数据库的使用情况
 ```sql
 $ sqlplus system/123@pdborcl
@@ -101,7 +103,7 @@ SQL>SELECT a.tablespace_name "表空间名",Total/1024/1024 "大小MB",
         group  BY tablespace_name)b
  where  a.tablespace_name = b.tablespace_name;
 ```
-![image](./img/img08.png)
+![image](./img/img07.png)
 
 ## 实验总结
 经过这次实验，我学习到了如何创建用户和角色，然后怎么去赋予角色一定的权限，该权限能够让新用户和角色在数据库中能进行查询、添加等操作，然后还学会了如何使用SQL语句查询数据库的使用情况。这些操作都是非常实用的，能够方便我们对数据库进行管理和赋予其他角色进行管理的操作。
