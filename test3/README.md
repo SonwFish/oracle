@@ -19,7 +19,7 @@
 
 ## 实验步骤
 
-1.首先创建自己的账号 lqx_user，然后以 system 身份登录: 
+1.首先创建自己的账号 HHB_201810414413，然后以 system 身份登录: 
 ```sql
     ALTER USER HHB_201810414413 QUOTA UNLIMITED ON USERS;
     ALTER USER HHB_201810414413 QUOTA UNLIMITED ON USERS02;
