@@ -42,8 +42,6 @@
 ![image](./img/img03.png)
 
 
-3.新用户hhb_201810414413连接到pdborcl，创建表mytable和视图myview，插入数据，最后将myview的SELECT对象权限授予hr用户。
-
 ## 查看数据库的使用情况
 以下样例查看表空间的数据库文件，以及每个文件的磁盘占用情况。
 ![image](./img/img04.png)
